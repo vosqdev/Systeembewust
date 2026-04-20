@@ -258,28 +258,34 @@ const DivisionPage = ({ division, t, lang, onToggleLang, onBack }: { division: a
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
-      className="fixed inset-0 z-50 flex flex-col md:flex-row bg-black text-white overflow-hidden"
+      className="fixed inset-0 z-50 flex flex-col md:flex-row bg-black text-white overflow-y-auto md:overflow-hidden touch-pan-y"
     >
-      {/* Left Side */}
+      {/* 
+        To make natural scrolling work on mobile without flex-col-reverse bugs,
+        we structure it normally (flex-col) and use CSS 'order' to put the Image
+        on top on mobile, and the Content on the left on desktop.
+      */}
+
+      {/* Content Side */}
       <div
-        className="w-full md:w-1/2 h-1/2 md:h-full relative flex flex-col p-8 md:p-12 lg:p-16"
+        className="order-2 md:order-1 w-full md:w-1/2 h-max min-h-[60vh] md:min-h-0 md:h-full relative flex flex-col p-8 pt-12 md:p-12 lg:p-16 shrink-0 md:shrink"
         style={{ backgroundColor: division.color }}
       >
         {/* Logo */}
-        <div className="cursor-pointer z-20 inline-block w-fit group mb-8" onClick={onBack}>
-          <div className="text-3xl font-heading font-bold tracking-tighter flex items-center text-black group-hover:opacity-80 transition-opacity">
-            {t.logo1}<span className="w-4 h-4 bg-white rounded-full ml-0.5 mt-1 shadow-sm"></span>
+        <div className="cursor-pointer z-20 inline-block w-fit group mb-6 md:mb-8" onClick={onBack}>
+          <div className="text-2xl md:text-3xl font-heading font-bold tracking-tighter flex items-center text-black group-hover:opacity-80 transition-opacity">
+            {t.logo1}<span className="w-3 h-3 md:w-4 md:h-4 bg-white rounded-full ml-0.5 mt-1 shadow-sm"></span>
           </div>
-          <div className="text-xs font-sans font-bold tracking-[0.2em] mt-0.5 text-black group-hover:opacity-80 transition-opacity">{t.logo2}</div>
+          <div className="text-[10px] md:text-xs font-sans font-bold tracking-[0.2em] mt-0.5 text-black group-hover:opacity-80 transition-opacity">{t.logo2}</div>
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col z-20 max-w-xl overflow-y-auto pr-4 custom-scrollbar text-black">
+        <div className="flex-1 flex flex-col z-20 max-w-xl overflow-visible md:overflow-y-auto pr-0 md:pr-4 custom-scrollbar text-black pb-12 md:pb-0">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-[1.05] tracking-tighter mb-8"
+            className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold leading-[1.05] tracking-tighter mb-6 md:mb-8"
           >
             {division.cardTitle}
           </motion.h1>
@@ -288,68 +294,69 @@ const DivisionPage = ({ division, t, lang, onToggleLang, onBack }: { division: a
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="space-y-8"
+            className="space-y-6 md:space-y-8"
           >
             {division.details.sections.map((section: any, idx: number) => (
               <div key={idx}>
-                <h3 className="font-heading font-bold text-xl mb-3 tracking-tight">{section.title}</h3>
+                <h3 className="font-heading font-bold text-lg md:text-xl mb-3 tracking-tight">{section.title}</h3>
                 <ul className="list-disc pl-5 space-y-2">
                   {section.items.map((item: string, i: number) => (
-                    <li key={i} className="text-black/80 font-medium text-base leading-relaxed">{item}</li>
+                    <li key={i} className="text-black/80 font-medium text-sm md:text-base leading-relaxed">{item}</li>
                   ))}
                 </ul>
               </div>
             ))}
             
-            <div className="mt-8 p-6 bg-black/5 rounded-2xl border border-black/10 backdrop-blur-sm">
-              <h3 className="font-heading font-bold text-xl mb-3 flex items-center gap-2 tracking-tight">
+            <div className="mt-8 p-5 md:p-6 bg-black/5 rounded-2xl border border-black/10 backdrop-blur-sm">
+              <h3 className="font-heading font-bold text-lg md:text-xl mb-3 flex items-center gap-2 tracking-tight">
                 {t.insightTitle}
               </h3>
-              <p className="text-black/90 font-medium italic text-lg leading-relaxed">
+              <p className="text-black/90 font-medium italic text-base md:text-lg leading-relaxed">
                 {division.details.inzicht}
               </p>
             </div>
           </motion.div>
         </div>
 
-        {/* Left Half Circle */}
+        {/* Left Half Circle (Desktop Only) */}
         <div
-          className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] lg:w-[800px] lg:h-[800px] rounded-full pointer-events-none z-10"
+          className="hidden md:block absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] lg:w-[800px] lg:h-[800px] rounded-full pointer-events-none z-10"
           style={{
             background: 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 20%, rgba(255,255,255,0) 70%)'
           }}
         />
       </div>
 
-      {/* Right Side */}
-      <div className="w-full md:w-1/2 h-1/2 md:h-full relative">
+      {/* Right Side (Image + Nav) */}
+      <div className="order-1 md:order-2 w-full md:w-1/2 h-[45vh] min-h-[300px] md:h-full relative shrink-0">
         <img src={division.cardImage} alt={division.name} className="absolute inset-0 w-full h-full object-cover" />
 
         {/* Top Nav */}
-        <div className="absolute top-0 left-0 right-0 p-8 md:p-12 flex justify-end gap-3 md:gap-4 z-20 items-center">
+        <div className="absolute top-0 left-0 right-0 p-6 md:p-12 flex justify-end gap-2 md:gap-4 z-20 items-center">
           <button 
             onClick={onBack} 
-            className="px-6 py-2.5 rounded-full border border-white/20 bg-[#0a0f1a]/60 hover:bg-[#0a0f1a]/80 backdrop-blur-md hover:border-white/40 transition-all font-sans font-medium text-sm text-white/90 hover:text-white shadow-[0_0_15px_rgba(0,0,0,0.3)] flex items-center gap-2"
+            className="px-4 py-2 md:px-6 md:py-2.5 rounded-full border border-white/20 bg-[#0a0f1a]/60 hover:bg-[#0a0f1a]/80 backdrop-blur-md hover:border-white/40 transition-all font-sans font-medium text-xs md:text-sm text-white/90 hover:text-white shadow-[0_0_15px_rgba(0,0,0,0.3)] flex items-center gap-1.5 md:gap-2 mr-auto"
           >
             <ArrowLeft size={16} />
-            {t.backToHome}
+            <span className="hidden sm:inline">{t.backToHome}</span>
+            <span className="sm:hidden">Terug</span>
           </button>
           <button
             onClick={onToggleLang}
-            className="w-10 h-10 rounded-full border border-white/20 bg-[#0a0f1a]/60 hover:bg-[#0a0f1a]/80 backdrop-blur-md hover:border-white/40 transition-all shadow-[0_0_15px_rgba(0,0,0,0.3)] flex items-center justify-center z-50 mix-blend-normal"
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 bg-[#0a0f1a]/60 hover:bg-[#0a0f1a]/80 backdrop-blur-md hover:border-white/40 transition-all shadow-[0_0_15px_rgba(0,0,0,0.3)] flex items-center justify-center z-50 mix-blend-normal"
             title={lang === 'nl' ? 'Switch to English' : 'Schakel over naar Nederlands'}
           >
-            <Globe className="w-5 h-5 text-white/90" />
+            <Globe className="w-4 h-4 md:w-5 md:h-5 text-white/90" />
             <span className="sr-only">Toggle Language</span>
           </button>
           <a 
             href="https://www.vovon.nl" 
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-2.5 rounded-full border border-white/20 bg-[#0a0f1a]/60 hover:bg-[#0a0f1a]/80 backdrop-blur-md hover:border-white/40 transition-all font-sans font-medium text-sm text-white/90 hover:text-white shadow-[0_0_15px_rgba(0,0,0,0.3)] flex items-center gap-2"
+            className="px-4 py-2 md:px-6 md:py-2.5 rounded-full border border-white/20 bg-[#0a0f1a]/60 hover:bg-[#0a0f1a]/80 backdrop-blur-md hover:border-white/40 transition-all font-sans font-medium text-xs md:text-sm text-white/90 hover:text-white shadow-[0_0_15px_rgba(0,0,0,0.3)] flex items-center gap-1.5 md:gap-2"
           >
             {t.contact}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="12" height="12" className="md:w-[14px] md:h-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
               <polyline points="15 3 21 3 21 9"></polyline>
               <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -357,15 +364,20 @@ const DivisionPage = ({ division, t, lang, onToggleLang, onBack }: { division: a
           </a>
         </div>
 
-        {/* Right Half Circle Overlay */}
+        {/* Right Half Circle Overlay (Desktop Only) */}
         <div
-          className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-[600px] h-[600px] lg:w-[800px] lg:h-[800px] rounded-full pointer-events-none z-10"
+          className="hidden md:block absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-[600px] h-[600px] lg:w-[800px] lg:h-[800px] rounded-full pointer-events-none z-10"
           style={{
             backgroundColor: division.color,
             opacity: 0.5,
             mixBlendMode: 'multiply'
           }}
         />
+        
+        {/* Mobile Gradient Overlay */}
+        <div className="md:hidden absolute inset-0 bg-gradient-to-t pointer-events-none" style={{ 
+          background: `linear-gradient(to top, ${division.color} 0%, transparent 100%)`
+        }} />
       </div>
     </motion.div>
   );
