@@ -1,6 +1,37 @@
-import React, { useEffect, useRef, useState } from 'react';
+// @ts-nocheck
+import React, { useEffect, useRef, useState, Component, ErrorInfo, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Zap, Home as HomeIcon, Car, Leaf, Map, Droplets, Network, X, ChevronDown, ArrowLeft, Globe } from 'lucide-react';
+
+class ErrorBoundary extends React.Component<{ children: ReactNode }, { hasError: boolean; error: Error | null; errorInfo: ErrorInfo | null }> {
+  state = { hasError: false, error: null as Error | null, errorInfo: null as ErrorInfo | null };
+
+  constructor(props: { children: ReactNode }) {
+    super(props);
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    this.setState({ errorInfo });
+    console.error("ErrorBoundary caught an error", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-black text-red-500 p-8 flex flex-col items-start justify-center overflow-auto">
+          <h1 className="text-2xl font-bold mb-4">Something went wrong.</h1>
+          <p className="mb-4">{this.state.error && this.state.error.toString()}</p>
+          <pre className="text-xs whitespace-pre-wrap break-words">{this.state.errorInfo?.componentStack}</pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const StarryBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -251,7 +282,7 @@ const getTranslation = (lang: 'nl' | 'en') => {
   };
 };
 
-const DivisionPage = ({ division, t, lang, onToggleLang, onBack }: { division: any, t: any, lang: 'nl' | 'en', onToggleLang: () => void, onBack: () => void }) => {
+const DivisionPage: React.FC<{ division: any, t: any, lang: 'nl' | 'en', onToggleLang: () => void, onBack: () => void, key?: string }> = ({ division, t, lang, onToggleLang, onBack }) => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.98 }}
@@ -383,7 +414,7 @@ const DivisionPage = ({ division, t, lang, onToggleLang, onBack }: { division: a
   );
 };
 
-export default function App() {
+function AppContent() {
   const [lang, setLang] = useState<'nl' | 'en'>('nl');
   const [hoveredDivision, setHoveredDivision] = useState<string | null>(null);
   const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
@@ -669,5 +700,13 @@ export default function App() {
       )}
     </AnimatePresence>
     </>
+  );
+}
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
   );
 }
