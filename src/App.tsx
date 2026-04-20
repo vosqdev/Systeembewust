@@ -350,15 +350,7 @@ export default function App() {
   const [hoveredDivision, setHoveredDivision] = useState<string | null>(null);
   const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
   const [activePageId, setActivePageId] = useState<string | null>(null);
-  const [showWelcomeMessage, setShowWelcomeMessage] = useState(true);
   const hoverTimeoutRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowWelcomeMessage(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleMouseEnter = (id: string) => {
     if (hoverTimeoutRef.current) window.clearTimeout(hoverTimeoutRef.current);
@@ -378,42 +370,6 @@ export default function App() {
 
   return (
     <>
-      <AnimatePresence>
-        {showWelcomeMessage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[#02040a]/80 backdrop-blur-md"
-            onClick={() => setShowWelcomeMessage(false)}
-          >
-            <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="max-w-2xl text-center bg-[#0a0f1a]/80 border border-white/20 p-8 md:p-12 rounded-3xl shadow-[0_0_50px_rgba(59,130,246,0.3)] relative overflow-hidden"
-            >
-              {/* Subtle animated glow inside the card */}
-              <div className="absolute -inset-[100%] animate-[spin_8s_linear_infinite] opacity-30"
-                   style={{ background: 'conic-gradient(from 0deg, transparent 0 340deg, #3b82f6 360deg)' }} />
-              <div className="absolute inset-[1px] bg-[#0a0f1a] rounded-[23px] z-0" />
-              
-              <div className="relative z-10 flex flex-col gap-6">
-                <h2 className="text-3xl md:text-4xl font-heading font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                  welkom bij systeembewust.nl.
-                </h2>
-                <div className="text-white/80 text-lg md:text-xl font-medium leading-relaxed font-sans">
-                  Transitie hoeft geen rem te zijn.<br/><br/>
-                  Integreer energie als ontwerpopdracht — van eerste stedenbouwkundig plan tot aansluit strategie.<br/><br/>
-                  <span className="text-white font-bold tracking-wide">Flexibel, schaalbaar en net klaar.</span>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <AnimatePresence mode="wait">
         {activePageId === null ? (
           <motion.div 

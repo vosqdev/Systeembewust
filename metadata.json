@@ -1,5 +1,6 @@
 {
-  "name": "Global Sustainability Hub",
-  "description": "A visually striking interactive dashboard featuring a 3D-like globe, showcasing various sustainability divisions like Green Hydrogen, Solar, and Smart Energy.",
-  "requestFramePermissions": []
+  "name": "Systeembewust.nl",
+  "description": "Oproep: kies voor systeembewust\nNederland heeft geen gebrek aan plannen.\nHet heeft een gebrek aan samenhang.\n\nDe komende jaren bepalen of:\n• we blijven vastlopen in procedures en transities, of\n• we versnellen door integraal te sturen op systemen",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
 }
