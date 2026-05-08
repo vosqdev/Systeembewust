@@ -479,7 +479,7 @@ function AppContent() {
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-heading font-medium leading-[1.1] tracking-[-0.02em] mb-4 lg:mb-6 whitespace-nowrap pointer-events-auto mt-6 lg:mt-0 drop-shadow-xl">
             {t.title} <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-[#b3d4ff] to-white/40 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">{t.titleHighlight}</span>
           </h1>
-          <p className="text-white/80 text-sm md:text-base leading-relaxed font-light tracking-wide max-w-md cursor-default pointer-events-auto">
+          <p className="hidden md:block text-white/80 text-xs md:text-sm leading-relaxed font-light tracking-wide max-w-md cursor-default pointer-events-auto">
             {t.subtitle}
           </p>
         </motion.div>
@@ -625,7 +625,7 @@ function AppContent() {
           </div>
 
           {/* Right Divisions List */}
-          <div className="absolute top-0 bottom-0 right-4 lg:right-0 lg:static lg:col-span-3 flex flex-col justify-center gap-7 lg:gap-4 z-20 pointer-events-none lg:pointer-events-auto items-end lg:items-start lg:pl-8 pt-24 lg:pt-0">
+          <div className="absolute top-0 bottom-0 right-4 lg:right-0 lg:static lg:col-span-3 flex flex-col justify-center gap-7 lg:gap-4 z-20 pointer-events-none lg:pointer-events-auto items-start lg:pl-8 pt-24 lg:pt-0">
             <AnimatePresence mode="popLayout">
               {divisions.filter(d => d.id !== 'kern').map((div, index, filteredDivs) => {
                 const Icon = div.icon;
@@ -633,18 +633,18 @@ function AppContent() {
                 const isSelected = selectedDivision === div.id;
                 const isActive = isHovered || isSelected;
                 
-                // Curve logic - we use smaller curve on mobile
+                // Curve logic
                 const middleIndex = (filteredDivs.length - 1) / 2;
                 const distance = Math.abs(index - middleIndex);
-                const curveOffset = Math.pow(distance, 2) * (isMobile ? 6 : 12);
+                const curveOffset = isMobile ? 0 : Math.pow(distance, 2) * 12;
                 
                 return (
                   <motion.div
                     key={div.id}
                     layout
-                    initial={{ opacity: 0, x: isMobile ? 50 : 50 + curveOffset }}
-                    animate={{ opacity: 1, x: isMobile ? -curveOffset : curveOffset }}
-                    exit={{ opacity: 0, x: isMobile ? 50 : 50 + curveOffset, scale: 0.9 }}
+                    initial={{ opacity: 0, x: 50 + curveOffset }}
+                    animate={{ opacity: 1, x: curveOffset }}
+                    exit={{ opacity: 0, x: 50 + curveOffset, scale: 0.9 }}
                     transition={{ duration: 0.4, delay: index * 0.05 }}
                     onMouseEnter={() => handleMouseEnter(div.id)}
                     onMouseLeave={handleMouseLeave}
