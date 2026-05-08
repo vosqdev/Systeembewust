@@ -299,15 +299,15 @@ const DivisionPage: React.FC<{ division: any, t: any, lang: 'nl' | 'en', onToggl
 
       {/* Content Side */}
       <div
-        className="order-2 md:order-1 w-full md:w-1/2 h-max min-h-[60vh] md:min-h-0 md:h-full relative flex flex-col p-8 pt-12 md:p-12 lg:p-16 shrink-0 md:shrink"
+        className="order-2 md:order-1 w-full md:w-1/2 h-max min-h-[60vh] md:min-h-0 md:h-full relative flex flex-col p-6 pt-10 md:p-10 lg:p-12 shrink-0 md:shrink"
         style={{ backgroundColor: division.color }}
       >
         {/* Logo */}
         <div className="cursor-pointer z-20 inline-block w-fit group mb-6 md:mb-8" onClick={onBack}>
-          <div className="text-2xl md:text-3xl font-heading font-bold tracking-tighter flex items-center text-black group-hover:opacity-80 transition-opacity">
-            {t.logo1}<span className="w-3 h-3 md:w-4 md:h-4 bg-white rounded-full ml-0.5 mt-1 shadow-sm"></span>
+          <div className="text-2xl md:text-3xl font-heading font-medium tracking-tight flex items-center text-black group-hover:opacity-80 transition-opacity drop-shadow-sm">
+            {t.logo1}<span className="w-2 h-2 md:w-2.5 md:h-2.5 bg-white rounded-full ml-1 md:mb-0.5 shadow-sm"></span>
           </div>
-          <div className="text-[10px] md:text-xs font-sans font-bold tracking-[0.2em] mt-0.5 text-black group-hover:opacity-80 transition-opacity">{t.logo2}</div>
+          <div className="text-[9px] md:text-[11px] font-sans font-medium tracking-[0.3em] mt-0.5 text-black/80 uppercase group-hover:opacity-80 transition-opacity">{t.logo2}</div>
         </div>
 
         {/* Content */}
@@ -316,7 +316,7 @@ const DivisionPage: React.FC<{ division: any, t: any, lang: 'nl' | 'en', onToggl
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold leading-[1.05] tracking-tighter mb-6 md:mb-8"
+            className="text-3xl md:text-5xl lg:text-6xl font-heading font-medium leading-[1.05] tracking-[-0.03em] mb-4 md:mb-6 text-black/90"
           >
             {division.cardTitle}
           </motion.h1>
@@ -329,20 +329,23 @@ const DivisionPage: React.FC<{ division: any, t: any, lang: 'nl' | 'en', onToggl
           >
             {division.details.sections.map((section: any, idx: number) => (
               <div key={idx}>
-                <h3 className="font-heading font-bold text-lg md:text-xl mb-3 tracking-tight">{section.title}</h3>
-                <ul className="list-disc pl-5 space-y-2">
+                <h3 className="font-heading font-semibold text-lg md:text-xl mb-2 tracking-[-0.01em] text-black/90">{section.title}</h3>
+                <ul className="list-none pl-0 space-y-2">
                   {section.items.map((item: string, i: number) => (
-                    <li key={i} className="text-black/80 font-medium text-sm md:text-base leading-relaxed">{item}</li>
+                    <li key={i} className="text-black/70 font-light text-sm md:text-base leading-snug flex items-start gap-2.5">
+                      <span className="mt-1.5 block w-1.5 h-1.5 rounded-full bg-black/40 shrink-0"></span>
+                      {item}
+                    </li>
                   ))}
                 </ul>
               </div>
             ))}
             
-            <div className="mt-8 p-5 md:p-6 bg-black/5 rounded-2xl border border-black/10 backdrop-blur-sm">
-              <h3 className="font-heading font-bold text-lg md:text-xl mb-3 flex items-center gap-2 tracking-tight">
+            <div className="mt-6 p-5 md:p-6 bg-black/5 rounded-xl border border-black/10 backdrop-blur-sm">
+              <h3 className="font-heading font-medium text-xs md:text-sm uppercase tracking-[0.1em] mb-2 flex items-center gap-2 text-black/60">
                 {t.insightTitle}
               </h3>
-              <p className="text-black/90 font-medium italic text-base md:text-lg leading-relaxed">
+              <p className="text-black/90 font-heading font-light italic text-lg md:text-xl leading-relaxed">
                 {division.details.inzicht}
               </p>
             </div>
@@ -473,10 +476,10 @@ function AppContent() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="w-full max-w-2xl mb-8 lg:mb-0 lg:absolute lg:top-12 lg:left-0 z-50 pr-24 lg:pr-0 mt-8 lg:mt-0 pointer-events-none"
         >
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold leading-tight tracking-tighter mb-4 lg:mb-6 whitespace-nowrap pointer-events-auto mt-6 lg:mt-0">
-            {t.title} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">{t.titleHighlight}</span>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-heading font-medium leading-[1.1] tracking-[-0.02em] mb-4 lg:mb-6 whitespace-nowrap pointer-events-auto mt-6 lg:mt-0 drop-shadow-xl">
+            {t.title} <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-[#b3d4ff] to-white/40 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">{t.titleHighlight}</span>
           </h1>
-          <p className="text-white/70 text-xs md:text-sm leading-relaxed font-medium max-w-md cursor-default pointer-events-auto">
+          <p className="text-white/80 text-sm md:text-base leading-relaxed font-light tracking-wide max-w-md cursor-default pointer-events-auto">
             {t.subtitle}
           </p>
         </motion.div>
@@ -500,7 +503,7 @@ function AppContent() {
             href="https://www.vovon.nl"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 lg:px-6 lg:py-2.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/40 transition-all font-sans font-medium text-xs lg:text-sm text-white/90 hover:text-white shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] inline-flex items-center gap-1.5 lg:gap-2 pointer-events-auto"
+            className="px-4 py-2 lg:px-6 lg:py-2.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/40 transition-all font-heading font-medium tracking-[0.1em] uppercase text-[10px] lg:text-xs text-white/90 hover:text-white shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] inline-flex items-center gap-1.5 lg:gap-2 pointer-events-auto"
           >
             {t.contact}
             <svg width="12" height="12" className="lg:w-[14px] lg:h-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -534,7 +537,7 @@ function AppContent() {
 
               {/* Tooltip */}
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
-                <span className="text-yellow-200 font-heading font-bold tracking-widest text-sm drop-shadow-md">{t.coreTooltip}</span>
+                <span className="text-yellow-200/90 font-heading font-medium tracking-[0.2em] uppercase text-xs drop-shadow-md">{t.coreTooltip}</span>
               </div>
             </motion.div>
           </div>
@@ -597,8 +600,8 @@ function AppContent() {
                       <X size={16} />
                     </button>
                     
-                    <h3 className="text-xl font-heading font-bold mb-3 pr-6 tracking-tight">{selectedDivData.cardTitle}</h3>
-                    <p className="text-sm text-white/80 leading-relaxed mb-auto font-medium">
+                    <h3 className="text-2xl font-heading font-medium mb-3 pr-6 tracking-tight text-white/95">{selectedDivData.cardTitle}</h3>
+                    <p className="text-sm text-white/70 leading-relaxed mb-auto font-light">
                       {selectedDivData.cardText}
                     </p>
                     
@@ -607,7 +610,7 @@ function AppContent() {
                         e.stopPropagation();
                         setActivePageId(selectedDivData.id);
                       }}
-                      className="mt-4 py-2.5 px-4 rounded-full text-sm font-bold tracking-wide transition-transform hover:scale-105 active:scale-95"
+                      className="mt-4 py-2.5 px-6 rounded-full text-xs font-semibold tracking-[0.1em] uppercase transition-all hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
                       style={{ 
                         backgroundColor: selectedDivData.color,
                         color: '#02040a'
@@ -674,8 +677,11 @@ function AppContent() {
                       />
                     </div>
                     <span 
-                      className={`font-heading font-semibold tracking-wider transition-all duration-300 ${isActive ? 'text-sm md:text-lg' : 'text-[10px] md:text-sm'} drop-shadow-md`}
-                      style={{ color: isActive ? 'white' : 'rgba(255,255,255,0.8)' }}
+                      className={`font-heading tracking-[0.15em] transition-all duration-300 uppercase ${isActive ? 'text-xs md:text-base font-medium' : 'text-[10px] md:text-sm font-light'} drop-shadow-md`}
+                      style={{ 
+                        color: isActive ? 'white' : 'rgba(255,255,255,0.5)',
+                        textShadow: isActive ? `0 0 15px ${div.color}60` : 'none'
+                      }}
                     >
                       {div.name}
                     </span>
