@@ -70,10 +70,11 @@ const StarryBackground = () => {
     let time = 0;
 
     const animate = () => {
-      // Create a dark gradient background
-      const gradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, Math.max(width, height));
-      gradient.addColorStop(0, '#0a0f1a');
-      gradient.addColorStop(1, '#02040a');
+      // Create a deeper dark gradient background to contrast perfectly with the luminous aurora colors
+      const gradient = ctx.createRadialGradient(width / 2, height * 0.3, 0, width / 2, height * 0.3, Math.max(width, height));
+      gradient.addColorStop(0, '#040d21'); // Deep navy stellar void
+      gradient.addColorStop(0.5, '#020612'); // Rich void space
+      gradient.addColorStop(1, '#000105'); // Seamless absolute dark edges
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
 
@@ -90,8 +91,8 @@ const StarryBackground = () => {
         }
       });
 
-      // Draw northern lights (Aurora Borealis / Noorderlicht)
-      time += 0.0015;
+      // Draw northern lights (Aurora Borealis / Noorderlicht) with rich colors and high-definition rays
+      time += 0.0018; // Slightly faster, more majestic movement
 
       const drawAurora = (
         yBase: number,
@@ -100,59 +101,65 @@ const StarryBackground = () => {
         b: number,
         amplitude: number,
         speed: number,
-        scale: number
+        scale: number,
+        maxOpacity: number
       ) => {
         ctx.save();
         ctx.globalCompositeOperation = 'screen';
 
-        const step = 6; // Draw vertical slits for that curtain-ray texture
+        const step = 1; // High-resolution, super-thin vertical filament rendering
         for (let x = 0; x < width; x += step) {
-          // Combine low and high frequencies for rich wave interaction
-          const angle1 = (x * 0.0015) + (time * speed);
-          const angle2 = (x * 0.0035) - (time * speed * 1.3);
+          // Double-wave synthesis for rich turbulence and natural organic folding
+          const angle1 = (x * 0.0012) + (time * speed);
+          const angle2 = (x * 0.0028) - (time * speed * 1.5);
           const waveHeight = Math.sin(angle1) * Math.cos(angle2);
 
           const currentY = yBase + waveHeight * amplitude;
 
-          // Ray noise simulates vertical curtains moving horizontally
-          const rayNoise = Math.sin(x * 0.03 + time * 1.8);
-          const curtainHeight = (110 + rayNoise * 35) * scale;
+          // Organic high-frequency ray noise simulates extremely fine vertical threads
+          const rayNoise = Math.sin(x * 0.07 + time * 2.1) * 0.55 + Math.cos(x * 0.025 - time * 1.2) * 0.45;
+          const curtainHeight = (120 + rayNoise * 40) * scale;
 
-          // Soft fade-out on the left and right screen edges
+          // Soft ambient fade on horizontal margins of the viewport
           let edgeFade = 1;
-          if (x < width * 0.15) {
-            edgeFade = x / (width * 0.15);
-          } else if (x > width * 0.85) {
-            edgeFade = (width - x) / (width * 0.15);
+          const fadeWidth = width * 0.2;
+          if (x < fadeWidth) {
+            edgeFade = x / fadeWidth;
+          } else if (x > width - fadeWidth) {
+            edgeFade = (width - x) / fadeWidth;
           }
 
-          // Smooth opacity based on wave shape
-          const opacity = Math.max(0, (waveHeight + 1.2) / 2.2) * 0.14 * edgeFade;
+          // Compute absolute glowing opacity for this bar
+          const opacity = Math.max(0, (waveHeight + 1.2) / 2.2) * maxOpacity * edgeFade;
 
-          if (opacity > 0.01) {
+          if (opacity > 0.008) {
             const grad = ctx.createLinearGradient(x, currentY - curtainHeight, x, currentY + curtainHeight);
             grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
-            grad.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${opacity * 0.55})`);
+            grad.addColorStop(0.25, `rgba(${r}, ${g}, ${b}, ${opacity * 0.65})`);
             grad.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${opacity})`);
-            grad.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, ${opacity * 0.55})`);
+            grad.addColorStop(0.75, `rgba(${r}, ${g}, ${b}, ${opacity * 0.5})`);
             grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
 
             ctx.fillStyle = grad;
-            ctx.fillRect(x, currentY - curtainHeight, step - 0.8, curtainHeight * 2);
+            // Draw slightly wider than step to avoid any anti-aliased seams or gaps
+            ctx.fillRect(x, currentY - curtainHeight, step + 0.5, curtainHeight * 2);
           }
         }
         ctx.restore();
       };
 
-      // Draw layered colored waves
-      // Purple-Violet Top Layer (Slow and high up)
-      drawAurora(height * 0.28, 168, 85, 247, height * 0.04, 0.15, 0.8);
+      // Draw beautiful, softer, overlapping layered bands
+      // Layer 1: High Altitude Solar Pink-Magenta Glow (Strikingly radiant but softer)
+      drawAurora(height * 0.24, 236, 72, 153, height * 0.05, 0.14, 0.85, 0.08);
       
-      // Teal Deep Layer (Medium height, drifting left)
-      drawAurora(height * 0.35, 20, 184, 166, height * 0.06, -0.22, 1.0);
+      // Layer 2: Deep Mystic Purple-Violet Band (Fills the center sky with a soft ambient hue)
+      drawAurora(height * 0.29, 139, 92, 246, height * 0.04, -0.18, 1.05, 0.11);
+      
+      // Layer 3: Vibrant Electric Teal-Cyan (Adding that modern, elegant glow)
+      drawAurora(height * 0.35, 6, 182, 212, height * 0.06, -0.26, 1.15, 0.12);
 
-      // Emerald Green Prime Layer (Most intense, drifting right)
-      drawAurora(height * 0.32, 46, 204, 113, height * 0.07, 0.28, 1.15);
+      // Layer 4: Luminous Emerald-Lime Green Core Wave (The powerful primary emission line, carefully balanced)
+      drawAurora(height * 0.32, 34, 197, 94, height * 0.08, 0.32, 1.35, 0.14);
 
       animationFrameId = requestAnimationFrame(animate);
     };
