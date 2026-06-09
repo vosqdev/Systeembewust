@@ -67,6 +67,7 @@ const StarryBackground = () => {
     initStars();
 
     let animationFrameId: number;
+    let time = 0;
 
     const animate = () => {
       // Create a dark gradient background
@@ -76,6 +77,7 @@ const StarryBackground = () => {
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
 
+      // Draw twinkly stars
       stars.forEach((star) => {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
@@ -87,6 +89,70 @@ const StarryBackground = () => {
           star.speed = -star.speed;
         }
       });
+
+      // Draw northern lights (Aurora Borealis / Noorderlicht)
+      time += 0.0015;
+
+      const drawAurora = (
+        yBase: number,
+        r: number,
+        g: number,
+        b: number,
+        amplitude: number,
+        speed: number,
+        scale: number
+      ) => {
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+
+        const step = 6; // Draw vertical slits for that curtain-ray texture
+        for (let x = 0; x < width; x += step) {
+          // Combine low and high frequencies for rich wave interaction
+          const angle1 = (x * 0.0015) + (time * speed);
+          const angle2 = (x * 0.0035) - (time * speed * 1.3);
+          const waveHeight = Math.sin(angle1) * Math.cos(angle2);
+
+          const currentY = yBase + waveHeight * amplitude;
+
+          // Ray noise simulates vertical curtains moving horizontally
+          const rayNoise = Math.sin(x * 0.03 + time * 1.8);
+          const curtainHeight = (110 + rayNoise * 35) * scale;
+
+          // Soft fade-out on the left and right screen edges
+          let edgeFade = 1;
+          if (x < width * 0.15) {
+            edgeFade = x / (width * 0.15);
+          } else if (x > width * 0.85) {
+            edgeFade = (width - x) / (width * 0.15);
+          }
+
+          // Smooth opacity based on wave shape
+          const opacity = Math.max(0, (waveHeight + 1.2) / 2.2) * 0.14 * edgeFade;
+
+          if (opacity > 0.01) {
+            const grad = ctx.createLinearGradient(x, currentY - curtainHeight, x, currentY + curtainHeight);
+            grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
+            grad.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${opacity * 0.55})`);
+            grad.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${opacity})`);
+            grad.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, ${opacity * 0.55})`);
+            grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(x, currentY - curtainHeight, step - 0.8, curtainHeight * 2);
+          }
+        }
+        ctx.restore();
+      };
+
+      // Draw layered colored waves
+      // Purple-Violet Top Layer (Slow and high up)
+      drawAurora(height * 0.28, 168, 85, 247, height * 0.04, 0.15, 0.8);
+      
+      // Teal Deep Layer (Medium height, drifting left)
+      drawAurora(height * 0.35, 20, 184, 166, height * 0.06, -0.22, 1.0);
+
+      // Emerald Green Prime Layer (Most intense, drifting right)
+      drawAurora(height * 0.32, 46, 204, 113, height * 0.07, 0.28, 1.15);
 
       animationFrameId = requestAnimationFrame(animate);
     };
