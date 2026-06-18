@@ -51,15 +51,14 @@ const StarryBackground = () => {
     
     const initStars = () => {
       stars = [];
-      // Calculate number of stars based on screen area to maintain density on high resolutions
       const numStars = Math.max(300, Math.floor((width * height) / 4000));
       for (let i = 0; i < numStars; i++) {
         stars.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          radius: Math.random() * 1.2,
+          radius: Math.random() * 1.3,
           alpha: Math.random(),
-          speed: Math.random() * 0.02 + 0.005,
+          speed: Math.random() * 0.015 + 0.005,
         });
       }
     };
@@ -92,7 +91,7 @@ const StarryBackground = () => {
       });
 
       // Draw northern lights (Aurora Borealis / Noorderlicht) with rich colors and high-definition rays
-      time += 0.0018; // Slightly faster, more majestic movement
+      time += 0.0018; 
 
       const drawAurora = (
         yBase: number,
@@ -148,7 +147,7 @@ const StarryBackground = () => {
         ctx.restore();
       };
 
-      // Draw beautiful, softer, overlapping layered bands
+      // Draw beautifully soft, overlapping layered bands
       // Layer 1: High Altitude Solar Pink-Magenta Glow (Strikingly radiant but softer)
       drawAurora(height * 0.24, 236, 72, 153, height * 0.05, 0.14, 0.85, 0.08);
       
@@ -496,6 +495,7 @@ function AppContent() {
   const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
   const [activePageId, setActivePageId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [globeLoaded, setGlobeLoaded] = useState(false);
   const hoverTimeoutRef = useRef<number | null>(null);
 
   const t = getTranslation(lang);
@@ -625,10 +625,22 @@ function AppContent() {
             >
               {/* Globe Image */}
               <div className="absolute inset-0 rounded-full overflow-hidden relative">
+                {/* Atmospheric back-glow / Fallback visual silhouette during load */}
+                <div 
+                  className="absolute inset-0 rounded-full transition-opacity duration-1000 pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(circle at center, rgba(16, 28, 64, 0.65) 0%, rgba(6, 12, 34, 0.85) 60%, rgba(2, 4, 10, 0.95) 100%)',
+                    boxShadow: 'inset 0 0 60px rgba(59, 130, 246, 0.35), 0 0 40px rgba(59, 130, 246, 0.15)',
+                    opacity: globeLoaded ? 0.35 : 1
+                  }}
+                />
+
                 <motion.img 
                   src="https://image2url.com/r2/default/images/1775378377279-d3e53349-fd3c-4e8d-be7c-44eedf7f115f.png" 
                   alt="Earth" 
-                  className="w-full h-full object-cover scale-[1.02]"
+                  className="w-full h-full object-cover scale-[1.02] transition-opacity duration-1000 ease-in-out"
+                  style={{ opacity: globeLoaded ? 1 : 0 }}
+                  onLoad={() => setGlobeLoaded(true)}
                   referrerPolicy="no-referrer"
                 />
                 
@@ -637,7 +649,7 @@ function AppContent() {
                   className="absolute inset-0 pointer-events-none transition-opacity duration-500"
                   style={{
                     background: `linear-gradient(to left, ${glowColor}90 0%, ${glowColor}00 50%)`,
-                    opacity: activeDivData ? 1 : 0,
+                    opacity: activeDivData && globeLoaded ? 1 : 0,
                     mixBlendMode: 'screen'
                   }}
                 />
