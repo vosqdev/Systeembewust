@@ -631,7 +631,9 @@ function AppContent() {
                   style={{
                     background: 'radial-gradient(circle at center, rgba(16, 28, 64, 0.65) 0%, rgba(6, 12, 34, 0.85) 60%, rgba(2, 4, 10, 0.95) 100%)',
                     boxShadow: 'inset 0 0 60px rgba(59, 130, 246, 0.35), 0 0 40px rgba(59, 130, 246, 0.15)',
-                    opacity: globeLoaded ? 0.35 : 1
+                    opacity: globeLoaded ? 0.35 : 1,
+                    WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.4) 30%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 1) 100%)',
+                    maskImage: 'linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.4) 30%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 1) 100%)'
                   }}
                 />
 
